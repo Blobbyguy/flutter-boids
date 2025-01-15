@@ -3,36 +3,39 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - main # Adjust this to the branch you want to trigger deployments from
-
+      - main
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      # Install Flutter
+        
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      # Build the Flutter Web project
       - name: Build Flutter Web
         run: flutter build web --release
 
-      # Update the repository description
-      - name: Update Repository Description
-        env:
-          REPO: ${{ github.repository }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          URL="https://${{ github.repository_owner }}.github.io/${{ github.repository }}"
-          curl -X PATCH \
-            -H "Authorization: token $TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/$REPO \
-            -d "{\"description\": \"Deployed at $URL\"}"
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        # Automatically uploads an artifact from the './_site' directory by default
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
