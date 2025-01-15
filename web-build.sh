@@ -3,6 +3,8 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+sudo snap install flutter --classic
+
 # Build the Flutter web project
 flutter build web
 
