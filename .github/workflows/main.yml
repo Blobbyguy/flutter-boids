@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'  # Ignore changes to the README.md file
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,6 +37,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
+          # Update README.md with the deployment URL at the top
   deploy:
     permissions:
       id-token: write
@@ -51,6 +54,18 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update README.md with Deployment URL
+        run: |
+          DEPLOY_URL="${{ steps.deployment.outputs.page_url }}"
+          # Check if the README already has a deployment URL
+          if grep -q "Deployed at" README.md; then
+            # If the line exists, replace it
+            sed -i "0,/\(Deployed at .*\)/s//Deployed at $DEPLOY_URL/" README.md
+          else
+            # If the line doesn't exist, insert it at the top
+            sed -i "1i Deployed at $DEPLOY_URL" README.md
+          fi
       # Needs an admin token
       # - name: 'Set repository description'
       #   uses: rtvu/set-repository-description-action@v1
