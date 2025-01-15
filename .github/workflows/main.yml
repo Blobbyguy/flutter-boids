@@ -39,3 +39,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: 'Set repository description'
+        uses: rtvu/set-repository-description-action@v1
+        with:
+          description: 'Description of repository'
+          token: ${{ secrets.REPOSITORY_TOKEN}}
