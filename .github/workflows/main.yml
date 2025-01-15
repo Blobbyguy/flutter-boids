@@ -51,8 +51,9 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Set repository description'
-        uses: rtvu/set-repository-description-action@v1
-        with:
-          description: 'Description of repository'
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # Needs an admin token
+      # - name: 'Set repository description'
+      #   uses: rtvu/set-repository-description-action@v1
+      #   with:
+      #     description: 'Description of repository'
+      #     token: ${{ secrets.GITHUB_TOKEN }}
