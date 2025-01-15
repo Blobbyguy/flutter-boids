@@ -17,6 +17,12 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Run Flutter Doctor
+        run: flutter doctor
+
+      - name: Enable Web Support
+        run: flutter config --enable-web
+
       - name: Build Flutter Web
         run: flutter build web --release
 
