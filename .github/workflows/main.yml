@@ -24,13 +24,8 @@ jobs:
         run: flutter config --enable-web
 
       - name: Build Flutter Web
-        run: flutter build web --release --base-href ${{ github.repository }}
-
-      - name: Update base tag in index.html
-        run: |
-          BASE_PATH="/${{ github.repository }}"  # This assumes you want to use the repo name
-          sed -i "s|<head>|<head><base href=\"$BASE_PATH/\">|" build/web/index.html
-
+        run: flutter build web --release --base-href /${{ github.event.repository.name }}/
+        
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
