@@ -28,9 +28,15 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
+      - name: Update base tag in index.html
+        run: |
+          BASE_PATH="/${{ github.repository }}"  # This assumes you want to use the repo name
+          sed -i "s|<head>|<head><base href=\"$BASE_PATH/\">|" build/web/index.html
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+      
 
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
